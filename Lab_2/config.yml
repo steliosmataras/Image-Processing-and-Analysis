@@ -1,0 +1,54 @@
+#--------------------- $ Data Preparation ----------------------
+# HOG - Histogram of Oriented Gradients
+HOG:
+  orientations: 9
+  pixels_per_cell: 8 # patch size pixels_per_cell x pixels_per_cell
+  cells_per_block: 2 # block size cells_per_block x cells_per_block
+  transform_sqrt: True
+  block_norm: "L2-Hys"
+  own_implementation: True
+  epsilon: 1e-7
+#Dataset Labels - for classification report and confusion matrix
+labels: ['0','1','2','3','4','5','6','7','8','9']
+
+# Dimensionality reduction
+# may be used to reduce the number of features in the report process
+PCA:
+  n_comp: [2,3]
+  percentage: 0.85
+  classes: ["A","B","C"]
+
+#--------------------- Learning ----------------------
+# Classifier - Statistical
+classifier:
+  SVC:
+    C: 1
+    kernel: "rbf"
+    gamma: 1
+
+# Parameter Grid for Fine-tuning, for instance, a Grid Search classifier
+fine_tune:
+  Permit : False
+  param_grid: [
+    {'C': [0.01,0.1, 1, 10,100,1000], 'kernel': ['linear']},
+    {'C': [0.01,0.1, 1, 10,100,1000], 'gamma': [1,0.01,0.001, 0.0001], 'kernel': ['rbf']},
+    {'C': [0.01,0.1, 1, 10,100,1000], 'degree': [2,4], 'kernel': ['poly']},
+   ]
+  cv: 5
+  verbose: 2
+  check_results: False
+
+# Classifier - Neural Network
+CNN:
+  constructor_parameters: 
+    kernelsize: 3
+    imageshape: [28,28,1]
+    learning_rate: 0.1
+    epochnum: 100
+    minibatchsize: 64
+    firstlayer: 6
+    secondlayer: 16
+    activations: ["relu","relu","relu","relu","softmax"]
+    loss_function: "mean_squared_error"
+    optimizer: "SGD"
+  verbose: 2
